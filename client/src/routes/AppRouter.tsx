@@ -16,6 +16,9 @@ import { PurchasesPage } from '@/features/purchases/PurchasesPage';
 import { PurchaseFormPage } from '@/features/purchases/PurchaseFormPage';
 import { PurchaseDetailPage } from '@/features/purchases/PurchaseDetailPage';
 import { PaymentsPage } from '@/features/payments/PaymentsPage';
+import { OrdersPage } from '@/features/orders/OrdersPage';
+import { OrderFormPage } from '@/features/orders/OrderFormPage';
+import { OrderDetailPage } from '@/features/orders/OrderDetailPage';
 import { PlaceholderPage } from '@/components/PlaceholderPage';
 
 const router = createBrowserRouter([
@@ -42,7 +45,10 @@ const router = createBrowserRouter([
           { path: '/vendors/:id', element: <VendorDetailPage /> },
           { path: '/customers', element: <CustomersPage /> },
           { path: '/customers/:id', element: <CustomerDetailPage /> },
-          { path: '/orders', element: <PlaceholderPage title="Orders" phase="Phase 7" /> },
+          { path: '/orders', element: <OrdersPage /> },
+          { path: '/orders/new', element: <OrderFormPage /> },
+          { path: '/orders/:id', element: <OrderDetailPage /> },
+          { path: '/orders/:id/edit', element: <OrderFormPage /> },
           { path: '/reports', element: <PlaceholderPage title="Reports" phase="Phase 9" /> },
         ],
       },

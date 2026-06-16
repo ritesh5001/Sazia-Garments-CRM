@@ -8,13 +8,15 @@ import { Badge } from '@/components/ui/Badge';
 import { DataTable, type Column } from '@/components/ui/DataTable';
 import { CustomerFormModal } from './CustomerFormModal';
 import { InvoiceStatusBadge } from '@/features/invoices/statusBadge';
+import { OrderStatusBadge } from '@/features/orders/statusBadge';
 import { LedgerView } from '@/features/payments/LedgerView';
 import { getCustomer } from '@/api/customers';
 import { listInvoices } from '@/api/invoices';
+import { listOrders } from '@/api/orders';
 import { getCustomerLedger } from '@/api/ledger';
 import { formatINR, formatDate } from '@/lib/money';
 import { cn } from '@/lib/cn';
-import type { Invoice } from '@/types';
+import type { Invoice, Order } from '@/types';
 
 const tabs = ['Overview', 'Invoices', 'Ledger', 'Orders'] as const;
 type Tab = (typeof tabs)[number];
@@ -52,6 +54,12 @@ export function CustomerDetailPage() {
     enabled: !!id && tab === 'Ledger',
   });
 
+  const { data: orders } = useQuery({
+    queryKey: ['orders', { customer: id }],
+    queryFn: () => listOrders({ customer: id, limit: 50 }),
+    enabled: !!id && tab === 'Orders',
+  });
+
   if (isLoading) return <div className="text-sm text-slate-500">Loading…</div>;
   if (!customer) return <div className="text-sm text-slate-500">Customer not found.</div>;
 
@@ -60,6 +68,13 @@ export function CustomerDetailPage() {
     { header: 'Date', cell: (i) => formatDate(i.date) },
     { header: 'Total', className: 'text-right', cell: (i) => formatINR(i.total) },
     { header: 'Status', cell: (i) => <InvoiceStatusBadge status={i.status} /> },
+  ];
+
+  const orderColumns: Column<Order>[] = [
+    { header: 'Order #', cell: (o) => o.orderNumber },
+    { header: 'Date', cell: (o) => formatDate(o.date) },
+    { header: 'Total', className: 'text-right', cell: (o) => formatINR(o.total) },
+    { header: 'Status', cell: (o) => <OrderStatusBadge status={o.status} /> },
   ];
 
   return (
@@ -124,10 +139,13 @@ export function CustomerDetailPage() {
       ) : tab === 'Ledger' ? (
         <LedgerView ledger={ledger} balanceLabel="Receivable" />
       ) : (
-        <Card className="flex flex-col items-center justify-center gap-1 p-12 text-center">
-          <p className="text-slate-500">{tab} history will appear here.</p>
-          <p className="text-sm text-slate-400">Wired up once the Orders (Phase 7) module is built.</p>
-        </Card>
+        <DataTable
+          columns={orderColumns}
+          rows={orders?.data ?? []}
+          rowKey={(o) => o._id}
+          emptyMessage="No orders for this customer yet."
+          onRowClick={(o) => navigate(`/orders/${o._id}`)}
+        />
       )}
 
       <CustomerFormModal open={editOpen} onClose={() => setEditOpen(false)} customer={customer} />
