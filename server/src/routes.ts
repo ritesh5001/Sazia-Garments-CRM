@@ -8,6 +8,7 @@ import purchaseRoutes from './modules/purchases/purchases.routes.js';
 import paymentRoutes from './modules/payments/payments.routes.js';
 import ledgerRoutes from './modules/ledger/ledger.routes.js';
 import orderRoutes from './modules/orders/orders.routes.js';
+import dashboardRoutes from './modules/dashboard/dashboard.routes.js';
 
 const router = Router();
 
@@ -20,6 +21,7 @@ router.use('/purchases', purchaseRoutes);
 router.use('/payments', paymentRoutes);
 router.use('/ledger', ledgerRoutes);
 router.use('/orders', orderRoutes);
+router.use('/dashboard', dashboardRoutes);
 
 // Future module routes mount here (reports, users, ...)
 
