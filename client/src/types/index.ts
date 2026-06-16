@@ -54,3 +54,45 @@ export interface Vendor {
   createdAt: string;
   updatedAt: string;
 }
+
+export type ProductUnit = 'meter' | 'piece' | 'kg' | 'roll' | 'dozen' | 'set';
+
+export interface Product {
+  _id: string;
+  name: string;
+  sku?: string;
+  category?: string;
+  unit: ProductUnit;
+  reorderLevel: number;
+  costPrice: number; // paise per unit
+  sellingPrice: number; // paise per unit
+  currentStock: number;
+  gstRate: number; // percent
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type MovementType = 'inward' | 'outward' | 'adjustment';
+
+export interface StockMovement {
+  _id: string;
+  product: string;
+  type: MovementType;
+  quantity: number; // signed delta applied
+  rate: number; // paise per unit
+  balanceAfter: number;
+  note?: string;
+  reference?: string;
+  createdBy: string;
+  createdAt: string;
+}
+
+export interface InventoryReport {
+  totalProducts: number;
+  totalUnits: number;
+  inventoryValueAtCost: number;
+  inventoryValueAtSelling: number;
+  lowStockCount: number;
+  lowStock: Product[];
+}
