@@ -9,6 +9,7 @@ import {
   ClipboardList,
   BarChart3,
   ShieldCheck,
+  ScrollText,
   type LucideIcon,
 } from 'lucide-react';
 import type { UserRole } from '@/types';
@@ -31,4 +32,5 @@ export const navItems: NavItem[] = [
   { label: 'Orders', path: '/orders', icon: ClipboardList },
   { label: 'Reports', path: '/reports', icon: BarChart3 },
   { label: 'Users', path: '/users', icon: ShieldCheck, roles: ['admin'] },
+  { label: 'Activity Logs', path: '/logs', icon: ScrollText, roles: ['admin'] },
 ];

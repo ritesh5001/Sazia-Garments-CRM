@@ -20,7 +20,8 @@ import { OrdersPage } from '@/features/orders/OrdersPage';
 import { OrderFormPage } from '@/features/orders/OrderFormPage';
 import { OrderDetailPage } from '@/features/orders/OrderDetailPage';
 import { ReportsPage } from '@/features/reports/ReportsPage';
-import { PlaceholderPage } from '@/components/PlaceholderPage';
+import { UsersPage } from '@/features/users/UsersPage';
+import { ActivityLogsPage } from '@/features/logs/ActivityLogsPage';
 
 const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
@@ -59,7 +60,8 @@ const router = createBrowserRouter([
           {
             element: <AppLayout />,
             children: [
-              { path: '/users', element: <PlaceholderPage title="User Management" phase="Phase 10" /> },
+              { path: '/users', element: <UsersPage /> },
+              { path: '/logs', element: <ActivityLogsPage /> },
             ],
           },
         ],

@@ -10,6 +10,8 @@ import ledgerRoutes from './modules/ledger/ledger.routes.js';
 import orderRoutes from './modules/orders/orders.routes.js';
 import dashboardRoutes from './modules/dashboard/dashboard.routes.js';
 import reportRoutes from './modules/reports/reports.routes.js';
+import userRoutes from './modules/users/users.routes.js';
+import logRoutes from './modules/logs/logs.routes.js';
 
 const router = Router();
 
@@ -24,7 +26,7 @@ router.use('/ledger', ledgerRoutes);
 router.use('/orders', orderRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/reports', reportRoutes);
-
-// Future module routes mount here (users, ...)
+router.use('/users', userRoutes);
+router.use('/logs', logRoutes);
 
 export default router;

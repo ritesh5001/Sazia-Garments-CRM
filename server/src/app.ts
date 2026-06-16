@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import { env } from './config/env.js';
 import apiRoutes from './routes.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
+import { activityLogger } from './middleware/activityLogger.js';
 
 export function createApp() {
   const app = express();
@@ -25,6 +26,7 @@ export function createApp() {
     res.json({ status: 'ok', service: 'sazia-crm', time: new Date().toISOString() });
   });
 
+  app.use(activityLogger);
   app.use('/api', apiRoutes);
 
   app.use(notFoundHandler);
