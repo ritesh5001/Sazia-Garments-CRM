@@ -1,7 +1,10 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
+// Configurable via VITE_API_BASE_URL; defaults to /api (proxied in dev).
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api';
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: API_BASE,
   withCredentials: true,
 });
 
@@ -27,7 +30,7 @@ let refreshing: Promise<string | null> | null = null;
 
 async function refreshAccessToken(): Promise<string | null> {
   try {
-    const { data } = await axios.post('/api/auth/refresh', {}, { withCredentials: true });
+    const { data } = await axios.post(`${API_BASE}/auth/refresh`, {}, { withCredentials: true });
     accessToken = data.accessToken;
     return accessToken;
   } catch {
