@@ -19,6 +19,7 @@ import { PaymentsPage } from '@/features/payments/PaymentsPage';
 import { OrdersPage } from '@/features/orders/OrdersPage';
 import { OrderFormPage } from '@/features/orders/OrderFormPage';
 import { OrderDetailPage } from '@/features/orders/OrderDetailPage';
+import { ReportsPage } from '@/features/reports/ReportsPage';
 import { PlaceholderPage } from '@/components/PlaceholderPage';
 
 const router = createBrowserRouter([
@@ -49,7 +50,7 @@ const router = createBrowserRouter([
           { path: '/orders/new', element: <OrderFormPage /> },
           { path: '/orders/:id', element: <OrderDetailPage /> },
           { path: '/orders/:id/edit', element: <OrderFormPage /> },
-          { path: '/reports', element: <PlaceholderPage title="Reports" phase="Phase 9" /> },
+          { path: '/reports', element: <ReportsPage /> },
         ],
       },
       {
