@@ -25,8 +25,8 @@
     ]
   },
   "env": {
-    "PROJECT_NAME": "MariData",
-    "PROJECT_TYPE": "people-database-management-platform",
+    "PROJECT_NAME": "Sazia Garments CRM",
+    "PROJECT_TYPE": "CRM for Garments Business",
     "AUTOPILOT_MODE": "true"
   },
   "model": "claude-opus-4-8"
