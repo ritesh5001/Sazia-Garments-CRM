@@ -197,3 +197,30 @@ export interface FinancialSummary {
   receivables: number;
   payables: number;
 }
+
+export type OrderStatus = 'created' | 'processing' | 'dispatched' | 'delivered' | 'cancelled';
+
+export interface OrderItem {
+  product?: string | { _id: string; name: string; sku?: string; unit?: string };
+  description: string;
+  quantity: number;
+  rate: number;
+  lineTotal: number;
+}
+
+export interface Order {
+  _id: string;
+  orderNumber: string;
+  customer: string | Pick<Customer, '_id' | 'name' | 'phone' | 'gstin'>;
+  date: string;
+  expectedDeliveryDate?: string;
+  items: OrderItem[];
+  total: number;
+  status: OrderStatus;
+  dispatch: { carrier?: string; trackingNumber?: string; dispatchedAt?: string };
+  delivery: { deliveredAt?: string; receivedBy?: string };
+  linkedInvoice?: string | { _id: string; invoiceNumber: string; total: number; status: string };
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
