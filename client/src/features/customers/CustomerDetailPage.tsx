@@ -5,10 +5,14 @@ import { ArrowLeft, Pencil } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { DataTable, type Column } from '@/components/ui/DataTable';
 import { CustomerFormModal } from './CustomerFormModal';
+import { InvoiceStatusBadge } from '@/features/invoices/statusBadge';
 import { getCustomer } from '@/api/customers';
+import { listInvoices } from '@/api/invoices';
 import { formatINR, formatDate } from '@/lib/money';
 import { cn } from '@/lib/cn';
+import type { Invoice } from '@/types';
 
 const tabs = ['Overview', 'Invoices', 'Ledger', 'Orders'] as const;
 type Tab = (typeof tabs)[number];
@@ -34,8 +38,21 @@ export function CustomerDetailPage() {
     enabled: !!id,
   });
 
+  const { data: invoices } = useQuery({
+    queryKey: ['invoices', { customer: id }],
+    queryFn: () => listInvoices({ customer: id, limit: 50 }),
+    enabled: !!id && tab === 'Invoices',
+  });
+
   if (isLoading) return <div className="text-sm text-slate-500">Loading…</div>;
   if (!customer) return <div className="text-sm text-slate-500">Customer not found.</div>;
+
+  const invoiceColumns: Column<Invoice>[] = [
+    { header: 'Invoice #', cell: (i) => i.invoiceNumber },
+    { header: 'Date', cell: (i) => formatDate(i.date) },
+    { header: 'Total', className: 'text-right', cell: (i) => formatINR(i.total) },
+    { header: 'Status', cell: (i) => <InvoiceStatusBadge status={i.status} /> },
+  ];
 
   return (
     <div className="space-y-5">
@@ -88,11 +105,19 @@ export function CustomerDetailPage() {
             <Field label="Notes" value={customer.notes} />
           </div>
         </Card>
+      ) : tab === 'Invoices' ? (
+        <DataTable
+          columns={invoiceColumns}
+          rows={invoices?.data ?? []}
+          rowKey={(i) => i._id}
+          emptyMessage="No invoices for this customer yet."
+          onRowClick={(i) => navigate(`/invoices/${i._id}`)}
+        />
       ) : (
         <Card className="flex flex-col items-center justify-center gap-1 p-12 text-center">
           <p className="text-slate-500">{tab} history will appear here.</p>
           <p className="text-sm text-slate-400">
-            Wired up once the {tab === 'Invoices' ? 'Invoice (Phase 4)' : tab === 'Ledger' ? 'Payments (Phase 6)' : 'Orders (Phase 7)'} module is built.
+            Wired up once the {tab === 'Ledger' ? 'Payments (Phase 6)' : 'Orders (Phase 7)'} module is built.
           </p>
         </Card>
       )}

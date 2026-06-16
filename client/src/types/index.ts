@@ -96,3 +96,53 @@ export interface InventoryReport {
   lowStockCount: number;
   lowStock: Product[];
 }
+
+export type InvoiceStatus = 'pending' | 'partial' | 'paid';
+
+export interface InvoiceLineItem {
+  product?: string | { _id: string; name: string; sku?: string; unit?: string };
+  description: string;
+  quantity: number;
+  rate: number; // paise per unit
+  gstRate: number; // percent
+  taxableValue: number;
+  gstAmount: number;
+  lineTotal: number;
+}
+
+export interface Invoice {
+  _id: string;
+  invoiceNumber: string;
+  customer: string | Pick<Customer, '_id' | 'name' | 'phone' | 'gstin'>;
+  date: string;
+  lineItems: InvoiceLineItem[];
+  subtotal: number;
+  gstAmount: number;
+  total: number;
+  amountPaid: number;
+  status: InvoiceStatus;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Purchases share the line-item and status shape with invoices.
+export type PurchaseStatus = InvoiceStatus;
+export type PurchaseLineItem = InvoiceLineItem;
+
+export interface Purchase {
+  _id: string;
+  purchaseNumber: string;
+  vendor: string | Pick<Vendor, '_id' | 'name' | 'phone' | 'gstin'>;
+  vendorInvoiceNumber?: string;
+  date: string;
+  lineItems: PurchaseLineItem[];
+  subtotal: number;
+  gstAmount: number;
+  total: number;
+  amountPaid: number;
+  status: PurchaseStatus;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}

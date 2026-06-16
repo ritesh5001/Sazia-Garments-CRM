@@ -9,6 +9,9 @@ import { VendorsPage } from '@/features/vendors/VendorsPage';
 import { VendorDetailPage } from '@/features/vendors/VendorDetailPage';
 import { InventoryPage } from '@/features/inventory/InventoryPage';
 import { ProductDetailPage } from '@/features/inventory/ProductDetailPage';
+import { InvoicesPage } from '@/features/invoices/InvoicesPage';
+import { InvoiceFormPage } from '@/features/invoices/InvoiceFormPage';
+import { InvoiceDetailPage } from '@/features/invoices/InvoiceDetailPage';
 import { PlaceholderPage } from '@/components/PlaceholderPage';
 
 const router = createBrowserRouter([
@@ -20,7 +23,10 @@ const router = createBrowserRouter([
         element: <AppLayout />,
         children: [
           { path: '/', element: <DashboardPage /> },
-          { path: '/invoices', element: <PlaceholderPage title="Invoices" phase="Phase 4" /> },
+          { path: '/invoices', element: <InvoicesPage /> },
+          { path: '/invoices/new', element: <InvoiceFormPage /> },
+          { path: '/invoices/:id', element: <InvoiceDetailPage /> },
+          { path: '/invoices/:id/edit', element: <InvoiceFormPage /> },
           { path: '/payments', element: <PlaceholderPage title="Payments" phase="Phase 6" /> },
           { path: '/inventory', element: <InventoryPage /> },
           { path: '/inventory/:id', element: <ProductDetailPage /> },

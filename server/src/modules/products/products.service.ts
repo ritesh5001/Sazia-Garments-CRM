@@ -50,10 +50,16 @@ export async function deleteProduct(id: string) {
 }
 
 /**
- * Apply a stock movement and adjust currentStock atomically (guards against
- * negative stock). Returns the created movement.
+ * Apply a stock movement and adjust currentStock atomically. By default guards
+ * against negative stock; pass allowNegative for corrections/reversals (e.g.
+ * deleting a purchase whose goods were already sold). Returns the movement.
  */
-export async function applyMovement(productId: string, input: MovementInput, userId: string) {
+export async function applyMovement(
+  productId: string,
+  input: MovementInput,
+  userId: string,
+  allowNegative = false
+) {
   const magnitude = Math.abs(input.quantity);
   const delta =
     input.type === 'inward'
@@ -63,7 +69,7 @@ export async function applyMovement(productId: string, input: MovementInput, use
         : input.quantity; // adjustment: use signed value as-is
 
   const filter: Record<string, unknown> = { _id: productId };
-  if (delta < 0) filter.currentStock = { $gte: -delta };
+  if (delta < 0 && !allowNegative) filter.currentStock = { $gte: -delta };
 
   const product = await Product.findOneAndUpdate(
     filter,
@@ -94,6 +100,32 @@ export async function applyMovement(productId: string, input: MovementInput, use
 export async function listMovements(productId: string, params: ListParams) {
   await getProduct(productId);
   return paginate(StockMovement, { ...params, sort: '-createdAt' }, { product: productId });
+}
+
+/**
+ * Ensure every product-linked line has enough stock to fulfil the requested
+ * quantity (aggregated across duplicate products). Throws 400 otherwise.
+ * Call before applying outward movements to avoid partial deductions.
+ */
+export async function assertStockAvailable(items: { product?: string; quantity: number }[]) {
+  const required = new Map<string, number>();
+  for (const item of items) {
+    if (!item.product) continue;
+    required.set(item.product, (required.get(item.product) ?? 0) + item.quantity);
+  }
+  if (required.size === 0) return;
+
+  const products = await Product.find({ _id: { $in: [...required.keys()] } }).select(
+    'name currentStock unit'
+  );
+  for (const p of products) {
+    const need = required.get(p.id) ?? 0;
+    if (p.currentStock < need) {
+      throw ApiError.badRequest(
+        `Insufficient stock for "${p.name}": need ${need} ${p.unit}, have ${p.currentStock}`
+      );
+    }
+  }
 }
 
 export async function inventoryReport() {

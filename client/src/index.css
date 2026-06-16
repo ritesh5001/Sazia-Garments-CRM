@@ -11,3 +11,16 @@ body,
 body {
   @apply bg-slate-50 text-slate-800 antialiased;
 }
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .print-area {
+    box-shadow: none !important;
+    border: none !important;
+  }
+  body {
+    background: white;
+  }
+}
