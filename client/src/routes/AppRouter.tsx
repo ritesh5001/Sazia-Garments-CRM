@@ -3,6 +3,10 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { ProtectedRoute } from './ProtectedRoute';
 import { LoginPage } from '@/features/auth/LoginPage';
 import { DashboardPage } from '@/features/dashboard/DashboardPage';
+import { CustomersPage } from '@/features/customers/CustomersPage';
+import { CustomerDetailPage } from '@/features/customers/CustomerDetailPage';
+import { VendorsPage } from '@/features/vendors/VendorsPage';
+import { VendorDetailPage } from '@/features/vendors/VendorDetailPage';
 import { PlaceholderPage } from '@/components/PlaceholderPage';
 
 const router = createBrowserRouter([
@@ -17,8 +21,10 @@ const router = createBrowserRouter([
           { path: '/invoices', element: <PlaceholderPage title="Invoices" phase="Phase 4" /> },
           { path: '/payments', element: <PlaceholderPage title="Payments" phase="Phase 6" /> },
           { path: '/inventory', element: <PlaceholderPage title="Inventory" phase="Phase 3" /> },
-          { path: '/vendors', element: <PlaceholderPage title="Vendors" phase="Phase 2" /> },
-          { path: '/customers', element: <PlaceholderPage title="Customers" phase="Phase 2" /> },
+          { path: '/vendors', element: <VendorsPage /> },
+          { path: '/vendors/:id', element: <VendorDetailPage /> },
+          { path: '/customers', element: <CustomersPage /> },
+          { path: '/customers/:id', element: <CustomerDetailPage /> },
           { path: '/orders', element: <PlaceholderPage title="Orders" phase="Phase 7" /> },
           { path: '/reports', element: <PlaceholderPage title="Reports" phase="Phase 9" /> },
         ],
