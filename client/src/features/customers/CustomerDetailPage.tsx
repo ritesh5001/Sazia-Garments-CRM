@@ -8,8 +8,10 @@ import { Badge } from '@/components/ui/Badge';
 import { DataTable, type Column } from '@/components/ui/DataTable';
 import { CustomerFormModal } from './CustomerFormModal';
 import { InvoiceStatusBadge } from '@/features/invoices/statusBadge';
+import { LedgerView } from '@/features/payments/LedgerView';
 import { getCustomer } from '@/api/customers';
 import { listInvoices } from '@/api/invoices';
+import { getCustomerLedger } from '@/api/ledger';
 import { formatINR, formatDate } from '@/lib/money';
 import { cn } from '@/lib/cn';
 import type { Invoice } from '@/types';
@@ -42,6 +44,12 @@ export function CustomerDetailPage() {
     queryKey: ['invoices', { customer: id }],
     queryFn: () => listInvoices({ customer: id, limit: 50 }),
     enabled: !!id && tab === 'Invoices',
+  });
+
+  const { data: ledger } = useQuery({
+    queryKey: ['ledger', 'customer', id],
+    queryFn: () => getCustomerLedger(id),
+    enabled: !!id && tab === 'Ledger',
   });
 
   if (isLoading) return <div className="text-sm text-slate-500">Loading…</div>;
@@ -113,12 +121,12 @@ export function CustomerDetailPage() {
           emptyMessage="No invoices for this customer yet."
           onRowClick={(i) => navigate(`/invoices/${i._id}`)}
         />
+      ) : tab === 'Ledger' ? (
+        <LedgerView ledger={ledger} balanceLabel="Receivable" />
       ) : (
         <Card className="flex flex-col items-center justify-center gap-1 p-12 text-center">
           <p className="text-slate-500">{tab} history will appear here.</p>
-          <p className="text-sm text-slate-400">
-            Wired up once the {tab === 'Ledger' ? 'Payments (Phase 6)' : 'Orders (Phase 7)'} module is built.
-          </p>
+          <p className="text-sm text-slate-400">Wired up once the Orders (Phase 7) module is built.</p>
         </Card>
       )}
 

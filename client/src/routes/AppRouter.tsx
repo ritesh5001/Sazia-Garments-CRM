@@ -12,6 +12,10 @@ import { ProductDetailPage } from '@/features/inventory/ProductDetailPage';
 import { InvoicesPage } from '@/features/invoices/InvoicesPage';
 import { InvoiceFormPage } from '@/features/invoices/InvoiceFormPage';
 import { InvoiceDetailPage } from '@/features/invoices/InvoiceDetailPage';
+import { PurchasesPage } from '@/features/purchases/PurchasesPage';
+import { PurchaseFormPage } from '@/features/purchases/PurchaseFormPage';
+import { PurchaseDetailPage } from '@/features/purchases/PurchaseDetailPage';
+import { PaymentsPage } from '@/features/payments/PaymentsPage';
 import { PlaceholderPage } from '@/components/PlaceholderPage';
 
 const router = createBrowserRouter([
@@ -27,7 +31,11 @@ const router = createBrowserRouter([
           { path: '/invoices/new', element: <InvoiceFormPage /> },
           { path: '/invoices/:id', element: <InvoiceDetailPage /> },
           { path: '/invoices/:id/edit', element: <InvoiceFormPage /> },
-          { path: '/payments', element: <PlaceholderPage title="Payments" phase="Phase 6" /> },
+          { path: '/purchases', element: <PurchasesPage /> },
+          { path: '/purchases/new', element: <PurchaseFormPage /> },
+          { path: '/purchases/:id', element: <PurchaseDetailPage /> },
+          { path: '/purchases/:id/edit', element: <PurchaseFormPage /> },
+          { path: '/payments', element: <PaymentsPage /> },
           { path: '/inventory', element: <InventoryPage /> },
           { path: '/inventory/:id', element: <ProductDetailPage /> },
           { path: '/vendors', element: <VendorsPage /> },

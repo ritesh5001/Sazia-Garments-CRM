@@ -1,6 +1,7 @@
 import {
   LayoutDashboard,
   FileText,
+  ShoppingCart,
   Wallet,
   Boxes,
   Truck,
@@ -22,6 +23,7 @@ export interface NavItem {
 export const navItems: NavItem[] = [
   { label: 'Dashboard', path: '/', icon: LayoutDashboard },
   { label: 'Invoices', path: '/invoices', icon: FileText },
+  { label: 'Purchases', path: '/purchases', icon: ShoppingCart },
   { label: 'Payments', path: '/payments', icon: Wallet },
   { label: 'Inventory', path: '/inventory', icon: Boxes },
   { label: 'Vendors', path: '/vendors', icon: Truck },

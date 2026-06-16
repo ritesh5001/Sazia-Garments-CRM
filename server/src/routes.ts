@@ -5,6 +5,8 @@ import vendorRoutes from './modules/vendors/vendors.routes.js';
 import productRoutes from './modules/products/products.routes.js';
 import invoiceRoutes from './modules/invoices/invoices.routes.js';
 import purchaseRoutes from './modules/purchases/purchases.routes.js';
+import paymentRoutes from './modules/payments/payments.routes.js';
+import ledgerRoutes from './modules/ledger/ledger.routes.js';
 
 const router = Router();
 
@@ -14,7 +16,9 @@ router.use('/vendors', vendorRoutes);
 router.use('/products', productRoutes);
 router.use('/invoices', invoiceRoutes);
 router.use('/purchases', purchaseRoutes);
+router.use('/payments', paymentRoutes);
+router.use('/ledger', ledgerRoutes);
 
-// Future module routes mount here (payments, orders, ...)
+// Future module routes mount here (orders, reports, ...)
 
 export default router;

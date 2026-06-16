@@ -146,3 +146,54 @@ export interface Purchase {
   createdAt: string;
   updatedAt: string;
 }
+
+export type PaymentDirection = 'incoming' | 'outgoing';
+export type PaymentMode = 'cash' | 'bank' | 'upi' | 'cheque';
+export type AllocationDocType = 'invoice' | 'purchase';
+
+export interface PaymentAllocation {
+  docType: AllocationDocType;
+  doc: string;
+  amount: number;
+}
+
+export interface Payment {
+  _id: string;
+  paymentNumber: string;
+  direction: PaymentDirection;
+  partyType: 'Customer' | 'Vendor';
+  party: string | { _id: string; name: string; phone?: string };
+  amount: number;
+  mode: PaymentMode;
+  reference?: string;
+  date: string;
+  allocations: PaymentAllocation[];
+  note?: string;
+  createdAt: string;
+}
+
+export interface LedgerEntry {
+  date: string;
+  type: string;
+  reference: string;
+  debit: number;
+  credit: number;
+  balance: number;
+}
+
+export interface Ledger {
+  party: { _id: string; name: string };
+  entries: LedgerEntry[];
+  totalDebit: number;
+  totalCredit: number;
+  closingBalance: number;
+}
+
+export interface FinancialSummary {
+  totalSales: number;
+  totalPurchases: number;
+  totalReceived: number;
+  totalPaid: number;
+  receivables: number;
+  payables: number;
+}

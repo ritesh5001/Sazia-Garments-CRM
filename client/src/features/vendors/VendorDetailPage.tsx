@@ -5,10 +5,16 @@ import { ArrowLeft, Pencil } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
+import { DataTable, type Column } from '@/components/ui/DataTable';
 import { VendorFormModal } from './VendorFormModal';
+import { InvoiceStatusBadge } from '@/features/invoices/statusBadge';
+import { LedgerView } from '@/features/payments/LedgerView';
 import { getVendor } from '@/api/vendors';
+import { listPurchases } from '@/api/purchases';
+import { getVendorLedger } from '@/api/ledger';
 import { formatINR, formatDate } from '@/lib/money';
 import { cn } from '@/lib/cn';
+import type { Purchase } from '@/types';
 
 const tabs = ['Overview', 'Purchases', 'Ledger'] as const;
 type Tab = (typeof tabs)[number];
@@ -34,8 +40,28 @@ export function VendorDetailPage() {
     enabled: !!id,
   });
 
+  const { data: purchases } = useQuery({
+    queryKey: ['purchases', { vendor: id }],
+    queryFn: () => listPurchases({ vendor: id, limit: 50 }),
+    enabled: !!id && tab === 'Purchases',
+  });
+
+  const { data: ledger } = useQuery({
+    queryKey: ['ledger', 'vendor', id],
+    queryFn: () => getVendorLedger(id),
+    enabled: !!id && tab === 'Ledger',
+  });
+
   if (isLoading) return <div className="text-sm text-slate-500">Loading…</div>;
   if (!vendor) return <div className="text-sm text-slate-500">Vendor not found.</div>;
+
+  const purchaseColumns: Column<Purchase>[] = [
+    { header: 'Purchase #', cell: (p) => p.purchaseNumber },
+    { header: 'Vendor Bill', cell: (p) => p.vendorInvoiceNumber || '—' },
+    { header: 'Date', cell: (p) => formatDate(p.date) },
+    { header: 'Total', className: 'text-right', cell: (p) => formatINR(p.total) },
+    { header: 'Status', cell: (p) => <InvoiceStatusBadge status={p.status} /> },
+  ];
 
   return (
     <div className="space-y-5">
@@ -89,13 +115,16 @@ export function VendorDetailPage() {
             <Field label="Notes" value={vendor.notes} />
           </div>
         </Card>
+      ) : tab === 'Purchases' ? (
+        <DataTable
+          columns={purchaseColumns}
+          rows={purchases?.data ?? []}
+          rowKey={(p) => p._id}
+          emptyMessage="No purchases for this vendor yet."
+          onRowClick={(p) => navigate(`/purchases/${p._id}`)}
+        />
       ) : (
-        <Card className="flex flex-col items-center justify-center gap-1 p-12 text-center">
-          <p className="text-slate-500">{tab} history will appear here.</p>
-          <p className="text-sm text-slate-400">
-            Wired up once the {tab === 'Purchases' ? 'Purchase (Phase 5)' : 'Payments (Phase 6)'} module is built.
-          </p>
-        </Card>
+        <LedgerView ledger={ledger} balanceLabel="Payable" />
       )}
 
       <VendorFormModal open={editOpen} onClose={() => setEditOpen(false)} vendor={vendor} />
