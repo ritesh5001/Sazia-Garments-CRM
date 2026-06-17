@@ -23,7 +23,8 @@ export const env = {
   },
   clientOrigin: (process.env.CLIENT_ORIGIN ?? 'http://localhost:5173')
     .split(',')
-    .map((o) => o.trim()),
+    .map((o) => o.trim().replace(/\/+$/, ''))
+    .filter(Boolean),
   seed: {
     name: process.env.SEED_ADMIN_NAME ?? 'Admin',
     email: process.env.SEED_ADMIN_EMAIL ?? 'admin@sazia.local',
